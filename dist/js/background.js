@@ -1,0 +1,1 @@
+(()=>{"use strict";var e=!0;chrome.commands.onCommand.addListener((function(o){"toggle-extension"===o&&(e=!e,chrome.storage.local.set({enabled:e}),chrome.tabs.reload())}))})();
