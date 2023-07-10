@@ -1,8 +1,14 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import ReactDOM from "react-dom/client";
+import Popup from "./pages/Popup";
 
-const container = document.createElement("highlight-integration");
-document.body.insertAdjacentElement("afterend", container);
 
-ReactDOM.render(<App />, container);
+const root = document.createElement("div");
+root.className = "container";
+document.body.appendChild(root);
+const rootDiv = ReactDOM.createRoot(root);
+rootDiv.render(
+  <React.StrictMode>
+    <Popup />
+  </React.StrictMode>
+);

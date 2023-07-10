@@ -8,11 +8,32 @@
     "48": "images/icon.png",
     "128": "images/icon.png"
   },
-  "action": {},
+  "action": {
+    "default_popup": "js/index.html",
+    "default_title": "Practice Highlight For IELTS"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["js/index.js"]
+      "js": ["js/inject.js"]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "tabs",
+    "management",
+    "storage"
+  ],
+  "commands": {
+    "toggle-extension": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+X",
+        "mac": "Command+Shift+X"
+      },
+      "description": "Toggle Extension On/ Off"
+    }
+  }
 }

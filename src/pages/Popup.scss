@@ -1,0 +1,24 @@
+.container {
+    text-align: center;
+    width: 15rem;
+    height: 15rem;
+
+    h3 {
+        background-color: rgb(255, 207, 82);
+        margin: 1rem;
+    }
+
+    .rounded-pill {
+        margin: 1rem 2rem 0.5rem;
+        padding: .3rem;
+        font-weight: 600;
+        border-radius: 50rem!important;
+        border: 1px solid transparent;
+        text-transform: none;
+    }
+
+    .title {
+        color: #fff;
+        background-color: rgb(108, 93, 211);
+    }
+}

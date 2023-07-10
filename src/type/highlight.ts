@@ -1,9 +1,19 @@
-export type Note = {
-    pos: Position;
+export interface Position {
+    left?: number;
+    top?: number;
+}
+
+export interface Note {
+    pos?: Position;
     text: string;
 }
 
-export type Position = {
-    top?: number; 
-    left?: number;
+export interface HighlightedRegion {
+    id: number;
+    note?: Note;
+}
+
+export interface ContextMenu {
+    mode?: string;
+    pos?: { top?: number; left?: number };
 }

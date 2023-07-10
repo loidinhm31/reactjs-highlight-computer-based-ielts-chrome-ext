@@ -1,24 +1,6 @@
 import React, { useEffect, useState } from "react";
-
-interface Position {
-  left?: number;
-  top?: number;
-}
-
-interface Note {
-  pos?: Position;
-  text: string;
-}
-
-interface HighlightedRegion {
-  id: number;
-  note?: Note;
-}
-
-interface ContextMenu {
-  mode?: string;
-  pos?: { top?: number; left?: number };
-}
+import "./HighlightNotes.scss";
+import { ContextMenu, HighlightedRegion, Note } from "../../type/highlight";
 
 export default function HighlightNotes(props: any) {
   const [noteVisibleId, setNoteVisibleId] = useState<number[]>([]);
@@ -54,12 +36,12 @@ export default function HighlightNotes(props: any) {
       noteDragging: undefined,
       contextMenu: {
         mode: "",
-        pos: {},
+        pos: {}
       },
       mouseClickPos: {},
       highlightedRegionClickedId: "",
       highlightedRegionsCounter: 0,
-      highlightedRegions: [],
+      highlightedRegions: []
     };
   };
 
@@ -75,13 +57,17 @@ export default function HighlightNotes(props: any) {
   };
 
   const leftClickAction = (event: MouseEvent): void => {
-    const selection = window.getSelection()?.getRangeAt(0);
-    const parentEl = selection?.commonAncestorContainer?.parentNode as HTMLElement;
-    if (parentEl?.classList.contains("isnote")) {
-      const id = parentEl.getAttribute("data-highlightedregion-id");
-      const idExisting = noteVisibleId.includes(parseInt(id!));
-      if (!idExisting) {
-        setNoteVisibleId((prevState) => [...prevState, parseInt(id!)]);
+    const selection = window.getSelection();
+
+    if (selection) {
+      const selected = selection.getRangeAt(0);
+      const parentEl = selected.commonAncestorContainer?.parentNode as HTMLElement;
+      if (parentEl?.classList.contains("isnote")) {
+        const id = parentEl.getAttribute("data-highlightedregion-id");
+        const idExisting = noteVisibleId.includes(parseInt(id!));
+        if (!idExisting) {
+          setNoteVisibleId((prevState) => [...prevState, parseInt(id!)]);
+        }
       }
     }
   };
@@ -97,8 +83,7 @@ export default function HighlightNotes(props: any) {
   const rightClickAction = (event: MouseEvent): void => {
     event.preventDefault();
     const selection = window.getSelection();
-    console.log(selection);
-    
+
     if (selection?.rangeCount! > 0) {
       const range = selection?.getRangeAt(0);
       const endContainer: any = range?.endContainer;
@@ -110,9 +95,10 @@ export default function HighlightNotes(props: any) {
           mode: "",
           pos: {
             top: event.clientY,
-            left: event.clientX,
-          },
+            left: event.clientX
+          }
         };
+
         const highlightedRegionClickedId = getHighlightIdFromParents(range?.commonAncestorContainer?.parentNode!);
         if (highlightedRegionClickedId !== "") {
           contextMenuData.mode = "existing";
@@ -127,7 +113,7 @@ export default function HighlightNotes(props: any) {
 
   const addListenerRightClick = (): void => {
     const el = document.body as HTMLElement;
-    
+
     if (el) {
       el.addEventListener("contextmenu", rightClickAction, false);
     }
@@ -152,7 +138,7 @@ export default function HighlightNotes(props: any) {
   const dragNote_Start = (event: React.MouseEvent, note: Note): void => {
     const mouseClickPosData = {
       offsetX: event.clientX - note.pos!.left!,
-      offsetY: event.clientY - note.pos!.top!,
+      offsetY: event.clientY - note.pos!.top!
     };
     setMouseClickPos(mouseClickPosData);
     setNoteDragging(note);
@@ -168,8 +154,8 @@ export default function HighlightNotes(props: any) {
         ...noteDragging,
         pos: {
           left: event.clientX - (mouseClickPos.offsetX || 0),
-          top: event.clientY - (mouseClickPos.offsetY || 0),
-        },
+          top: event.clientY - (mouseClickPos.offsetY || 0)
+        }
       };
       setNoteDragging(noteDraggingData);
     }
@@ -247,7 +233,7 @@ export default function HighlightNotes(props: any) {
     // add it to the array so we can keep track of them.
     const newHighlightedRegion: HighlightedRegion = {
       id: highlightedRegionsCounterData,
-      note: isNote ? { pos: contextMenu.pos, text: "" } : undefined,
+      note: isNote ? { pos: contextMenu.pos, text: "" } : undefined
     };
 
     setHighlightedRegions((prevState) => [...prevState, newHighlightedRegion]);
@@ -270,7 +256,6 @@ export default function HighlightNotes(props: any) {
   };
 
   const handleClickOutside = (event: React.MouseEvent): void => {
-    console.log("test1")
     if (event.target === event.currentTarget) {
       setContextMenu({ mode: "" });
     }
