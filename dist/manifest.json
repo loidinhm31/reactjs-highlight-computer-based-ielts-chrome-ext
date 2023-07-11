@@ -34,6 +34,13 @@
         "mac": "Command+Shift+X"
       },
       "description": "Toggle Extension On/ Off"
+    },
+    "control-player": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Space",
+        "mac": "Command+Shift+Space"
+      },
+      "description": "Control On/ Off Player"
     }
   }
 }
