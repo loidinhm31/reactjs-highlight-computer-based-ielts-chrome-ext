@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./HighlightNotes.scss";
 import { ContextMenu, HighlightedRegion, Note } from "../../type/highlight";
+import "./HighlightNotes.scss";
 
 export default function HighlightNotes(props: any) {
   const [noteVisibleId, setNoteVisibleId] = useState<number[]>([]);
@@ -36,12 +36,12 @@ export default function HighlightNotes(props: any) {
       noteDragging: undefined,
       contextMenu: {
         mode: "",
-        pos: {}
+        pos: {},
       },
       mouseClickPos: {},
       highlightedRegionClickedId: "",
       highlightedRegionsCounter: 0,
-      highlightedRegions: []
+      highlightedRegions: [],
     };
   };
 
@@ -95,8 +95,8 @@ export default function HighlightNotes(props: any) {
           mode: "",
           pos: {
             top: event.clientY,
-            left: event.clientX
-          }
+            left: event.clientX,
+          },
         };
 
         const highlightedRegionClickedId = getHighlightIdFromParents(range?.commonAncestorContainer?.parentNode!);
@@ -138,7 +138,7 @@ export default function HighlightNotes(props: any) {
   const dragNote_Start = (event: React.MouseEvent, note: Note): void => {
     const mouseClickPosData = {
       offsetX: event.clientX - note.pos!.left!,
-      offsetY: event.clientY - note.pos!.top!
+      offsetY: event.clientY - note.pos!.top!,
     };
     setMouseClickPos(mouseClickPosData);
     setNoteDragging(note);
@@ -154,8 +154,8 @@ export default function HighlightNotes(props: any) {
         ...noteDragging,
         pos: {
           left: event.clientX - (mouseClickPos.offsetX || 0),
-          top: event.clientY - (mouseClickPos.offsetY || 0)
-        }
+          top: event.clientY - (mouseClickPos.offsetY || 0),
+        },
       };
       setNoteDragging(noteDraggingData);
     }
@@ -219,32 +219,35 @@ export default function HighlightNotes(props: any) {
     const highlightedRegionsCounterData = highlightedRegionsCounter + 1;
     setHighlightedRegionsCounter(highlightedRegionsCounterData);
 
-    const selection = window.getSelection()?.getRangeAt(0);
-    const selectedText = selection?.extractContents();
-    const span = document.createElement("span");
-    span.classList.add("highlight");
-    if (isNote) {
-      span.classList.add("isnote");
+    const selection = window.getSelection();
+
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const selectedText = range?.extractContents();
+      const span = document.createElement("span");
+      span.classList.add("highlight");
+      if (isNote) {
+        span.classList.add("isnote");
+      }
+      span.setAttribute("data-highlightedregion-id", highlightedRegionsCounterData.toString());
+      span.appendChild(selectedText!);
+      range?.insertNode(span);
+
+      // add it to the array so we can keep track of them.
+      const newHighlightedRegion: HighlightedRegion = {
+        id: highlightedRegionsCounterData,
+        note: isNote ? { pos: contextMenu.pos, text: "" } : undefined,
+      };
+
+      setHighlightedRegions((prevState) => [...prevState, newHighlightedRegion]);
+
+      window.getSelection()?.removeAllRanges();
+
+      const idExisting = noteVisibleId.includes(highlightedRegionsCounterData);
+      if (!idExisting) {
+        setNoteVisibleId((prevState) => [...prevState, highlightedRegionsCounterData]);
+      }
     }
-    span.setAttribute("data-highlightedregion-id", highlightedRegionsCounterData.toString());
-    span.appendChild(selectedText!);
-    selection?.insertNode(span);
-
-    // add it to the array so we can keep track of them.
-    const newHighlightedRegion: HighlightedRegion = {
-      id: highlightedRegionsCounterData,
-      note: isNote ? { pos: contextMenu.pos, text: "" } : undefined
-    };
-
-    setHighlightedRegions((prevState) => [...prevState, newHighlightedRegion]);
-
-    window.getSelection()?.removeAllRanges();
-
-    const idExisting = noteVisibleId.includes(highlightedRegionsCounterData);
-    if (!idExisting) {
-      setNoteVisibleId((prevState) => [...prevState, highlightedRegionsCounterData]);
-    }
-
     setContextMenu({ mode: "" });
   };
 
