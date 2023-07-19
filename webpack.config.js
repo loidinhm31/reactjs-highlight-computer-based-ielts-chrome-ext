@@ -6,7 +6,7 @@ module.exports = {
   entry: {
     index: "./src/index.tsx",
     inject: "./src/inject.tsx",
-    background: "./src/background.ts"
+    service_worker: "./src/service-worker.ts"
   },
   mode: "production",
   module: {
