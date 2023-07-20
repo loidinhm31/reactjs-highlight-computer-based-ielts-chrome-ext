@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 // This only use on study4.com
 export default function ControlPlayer() {
